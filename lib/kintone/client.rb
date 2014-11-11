@@ -1,4 +1,4 @@
-require "kintone/client/version"
+require 'kintone/client/version'
 
 module Kintone
   module Client
