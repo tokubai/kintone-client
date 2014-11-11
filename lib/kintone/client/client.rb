@@ -1,0 +1,2 @@
+class Kintone::Client
+end

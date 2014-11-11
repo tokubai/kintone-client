@@ -1,7 +1,3 @@
+module Kintone; end
+require 'kintone/client/client'
 require 'kintone/client/version'
-
-module Kintone
-  module Client
-    # Your code goes here...
-  end
-end
