@@ -3,6 +3,7 @@ class Kintone::Client
 
   def initialize(options)
     @auth = {}
+    @raw = options.delete(:raw)
 
     [:login_name, :password, :api_token].each do |k|
       @auth[k] = options.delete(k)
@@ -25,15 +26,16 @@ class Kintone::Client
       raise ArgumentError, "wrong number of arguments (#{args.length} for 0)"
     end
 
-    Path.new(@conn, @auth, method_name.to_s)
+    Path.new(@conn, @auth, @raw, method_name.to_s)
   end
 
   class Path
     BASE_PATH = '/k/v1'
 
-    def initialize(conn, auth, path)
+    def initialize(conn, auth, raw, path)
       @conn = conn
       @auth = auth
+      @raw = raw
       @path = path
     end
 
@@ -76,7 +78,7 @@ class Kintone::Client
           raise ArgumentError, "wrong number of arguments (#{args.length} for 0)"
         end
 
-        self.class.new(@conn, @auth, @path + '/' + method_name.to_s)
+        self.class.new(@conn, @auth, @raw, @path + '/' + method_name.to_s)
       end
     end
   end # class Path
