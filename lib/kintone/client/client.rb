@@ -49,7 +49,48 @@ class Kintone::Client
         yield(req) if block_given?
       end
 
-      response.body
+      body = response.body
+
+      if response.status != 200
+        raise body.kind_of?(Hash) ? Kintone::Error.new(body) : body.inspect
+      end
+
+      if @raw or not body.kind_of?(Hash)
+        body
+      elsif record = body['record']
+        parse_form(record)
+      elsif records = body['records']
+        records.map {|r| parse_form(r) }
+      else
+        body
+      end
+    end
+
+    def parse_form(form)
+      parsed = {}
+
+      form.each do |name, field|
+        parsed[name] = parse_field(field)
+      end
+
+      parsed
+    end
+
+    def parse_field(field)
+      field_type  = field['type']
+      field_value = field['value']
+
+      if field_type == 'SUBTABLE'
+        subtable = {}
+
+        field_value.each do |row|
+          subtable[row['id']] = parse_form(row['value'])
+        end
+
+        subtable
+      else
+        field_value
+      end
     end
 
     def authorize(req)
