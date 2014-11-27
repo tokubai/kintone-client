@@ -1,6 +1,6 @@
 # Kintone::Client
 
-TODO: Write a gem description
+It is a simple client of cybozu kintone.
 
 ## Installation
 
@@ -33,4 +33,6 @@ p client.records.get(app: 211)
 p client.space.members.get(id: 4)
 ```
 
-see https://cybozudev.zendesk.com/hc/ja/categories/200147600-kintone-API
+## kintone API
+
+* https://cybozudev.zendesk.com/hc/ja/categories/200147600-kintone-API

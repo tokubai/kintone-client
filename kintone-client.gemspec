@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Kintone::Client::VERSION
   spec.authors       = ['Genki Sugawara']
   spec.email         = ['sugawara@cookpad.com']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{It is a simple client of cybozu kintone.}
+  spec.description   = %q{It is a simple client of cybozu kintone.}
   spec.homepage      = ''
   spec.license       = 'MIT'
 
