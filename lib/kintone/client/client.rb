@@ -14,8 +14,14 @@ class Kintone::Client
     @conn = Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
       faraday.response :json, :content_type => /\bjson$/
-      faraday.adapter Faraday.default_adapter
+
       yield(faraday) if block_given?
+
+      required_adapters = [Faraday::Adapter::NetHttp, Faraday::Adapter::Test]
+
+      unless required_adapters.any? {|i| faraday.builder.handlers.include?(i) }
+        faraday.adapter Faraday.default_adapter
+      end
     end
   end
 
