@@ -3,7 +3,6 @@ class Kintone::Client
 
   def initialize(options)
     @auth = {}
-    @raw = options.delete(:raw)
 
     [:login_name, :password, :api_token].each do |k|
       @auth[k] = options.delete(k)
@@ -13,6 +12,7 @@ class Kintone::Client
 
     @conn = Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
+      faraday.response :form, :content_type => /\bjson$/ # must set before :json
       faraday.response :json, :content_type => /\bjson$/
 
       yield(faraday) if block_given?
@@ -32,16 +32,15 @@ class Kintone::Client
       raise ArgumentError, "wrong number of arguments (#{args.length} for 0)"
     end
 
-    Path.new(@conn, @auth, @raw, method_name.to_s)
+    Path.new(@conn, @auth, method_name.to_s)
   end
 
   class Path
     BASE_PATH = '/k/v1'
 
-    def initialize(conn, auth, raw, path)
+    def initialize(conn, auth, path)
       @conn = conn
       @auth = auth
-      @raw = raw
       @path = path
     end
 
@@ -50,7 +49,7 @@ class Kintone::Client
     def request(method_name, params)
       response = @conn.send(method_name) do |req|
         req.url BASE_PATH + '/' + @path + '.json'
-        req.params = params
+        req.params = params || {}
         authorize(req)
         yield(req) if block_given?
       end
@@ -61,42 +60,7 @@ class Kintone::Client
         raise body.kind_of?(Hash) ? Kintone::Error.new(body) : body.inspect
       end
 
-      if @raw or not body.kind_of?(Hash)
-        body
-      elsif record = body['record']
-        parse_form(record)
-      elsif records = body['records']
-        records.map {|r| parse_form(r) }
-      else
-        body
-      end
-    end
-
-    def parse_form(form)
-      parsed = {}
-
-      form.each do |name, field|
-        parsed[name] = parse_field(field)
-      end
-
-      parsed
-    end
-
-    def parse_field(field)
-      field_type  = field['type']
-      field_value = field['value']
-
-      if field_type == 'SUBTABLE'
-        subtable = {}
-
-        field_value.each do |row|
-          subtable[row['id']] = parse_form(row['value'])
-        end
-
-        subtable
-      else
-        field_value
-      end
+      body
     end
 
     def authorize(req)
@@ -125,7 +89,7 @@ class Kintone::Client
           raise ArgumentError, "wrong number of arguments (#{args.length} for 0)"
         end
 
-        self.class.new(@conn, @auth, @raw, @path + '/' + method_name.to_s)
+        self.class.new(@conn, @auth, @path + '/' + method_name.to_s)
       end
     end
   end # class Path
