@@ -7,9 +7,13 @@ module Kintone::Client::Middleware
     def call(env)
       @app.call(env).on_complete do |env|
         if record = env[:body]['record']
-          env[:body] = parse_form(record)
+          env[:body] = {
+            'record' => parse_form(record)
+          }
         elsif records = env[:body]['records']
-          env[:body] = records.map {|r| parse_form(r) }
+          env[:body] = {
+            'records' => records.map {|r| parse_form(r) }
+          }
         end
       end
     end
