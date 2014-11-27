@@ -1,7 +1,7 @@
 module Kintone::Client::Middleware
   class Form < Faraday::Response::Middleware
     def initialize(app, options = nil)
-      @app = app
+      super(app)
     end
 
     def call(env)
