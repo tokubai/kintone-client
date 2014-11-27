@@ -1,6 +1,6 @@
 # Kintone::Client
 
-It is a simple client of cybozu kintone.
+It is a simple client of [cybozu kintone](https://kintone.cybozu.com).
 
 ## Installation
 
