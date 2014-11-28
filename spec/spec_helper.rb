@@ -5,7 +5,7 @@ TEST_AUTH_HEADER = 'c2NvdHQ6dGlnZXI='
 def kintone_client
   stubs = Faraday::Adapter::Test::Stubs.new
 
-  Kintone::Client.new(subdomein: 'foo', login_name: 'scott', password: 'tiger') do |faraday|
+  Kintone::Client.new(subdomain: 'foo', login_name: 'scott', password: 'tiger') do |faraday|
     faraday.adapter :test, stubs do |stub|
       yield(stub)
     end

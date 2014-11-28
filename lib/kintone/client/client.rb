@@ -4,11 +4,19 @@ class Kintone::Client
   def initialize(options)
     @auth = {}
 
-    [:login_name, :password, :api_token].each do |k|
-      @auth[k] = options.delete(k)
+    if options[:api_token]
+      @auth[:api_token] = options.delete(:api_token)
+    else
+      [:login_name, :password].each do |k|
+        @auth[k] = options.fetch(k)
+        options.delete(k)
+      end
     end
 
-    options[:url] ||= ENDPOINT % options.delete(:subdomein)
+    unless options[:url]
+      options[:url] = ENDPOINT % options.fetch(:subdomain)
+      options.delete(:subdomain)
+    end
 
     @conn = Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
