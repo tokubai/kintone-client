@@ -34,7 +34,7 @@ module Kintone::Client::Middleware
       if body['record']
         body['record'] = expand_record(body['record'])
       elsif body['requests']
-        if_has_record do |request|
+        if_has_record(body['requests']) do |request|
           record = request['payload']['record']
           next unless record
           request['payload']['record'] = expand_record(record)
@@ -61,9 +61,9 @@ module Kintone::Client::Middleware
       expanded
     end
 
-    def if_has_record
-      if body['requests'][0]['payload']['record']
-        body['requests'].each do |request|
+    def if_has_record(requests)
+      if requests[0]['payload']['record']
+        requests.each do |request|
           yield(request)
         end
       end
