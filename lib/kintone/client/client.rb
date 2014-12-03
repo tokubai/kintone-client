@@ -20,6 +20,7 @@ class Kintone::Client
 
     @conn = Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
+      faraday.request  :record, :content_type => /\bjson$/
       faraday.response :form, :content_type => /\bjson$/ # must set before :json
       faraday.response :json, :content_type => /\bjson$/
 
@@ -54,11 +55,19 @@ class Kintone::Client
 
     private
 
-    def request(method_name, params)
+    def request(method_name, params, options = {})
       response = @conn.send(method_name) do |req|
         req.url BASE_PATH + '/' + @path + '.json'
-        req.params = expand_params_array(params || {})
+
+        if options[:json]
+          req.body = JSON.dump(params)
+          req.headers['Content-Type'] = 'application/json'
+        else
+          req.params = expand_params_array(params || {})
+        end
+
         authorize(req)
+
         yield(req) if block_given?
       end
 
@@ -117,7 +126,9 @@ class Kintone::Client
     end
 
     def method_missing(method_name, *args, &block)
-      if [:get, :post, :put, :delete].include?(method_name)
+      method_name = method_name.to_s
+
+      if %w(get post put delete post_json put_json delete_json).include?(method_name)
         case args.length
         when 0
           args = nil
@@ -125,7 +136,14 @@ class Kintone::Client
           args = args.first
         end
 
-        request(method_name, args, &block)
+        options = {}
+
+        if method_name =~ /_json\z/
+          method_name.sub!(/_json\z/, '')
+          options[:json] = true
+        end
+
+        request(method_name, args, options, &block)
       else
         unless args.length.zero?
           raise ArgumentError, "wrong number of arguments (#{args.length} for 0)"
