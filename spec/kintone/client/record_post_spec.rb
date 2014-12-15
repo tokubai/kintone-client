@@ -60,5 +60,30 @@ describe Kintone::Client do
       result = client.record.post_json(unexpanded_request)
       expect(result).to eq response
     end
+
+    context 'when error happens' do
+      let(:request) do
+        {"app"=>1972}
+      end
+
+      let(:response) do
+        {"message"=>"不正なJSON文字列です。", "id"=>"1505999166-897850006", "code"=>"CB_IJ01"}
+      end
+
+      it do
+        client = kintone_client do |stub|
+          stub.post('/k/v1/record.json') do |env|
+            expect(env.body).to eq JSON.dump(request)
+            expect(env.request_headers['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
+            expect(env.request_headers['Content-Type']).to eq 'application/json'
+            [400, {'Content-Type' => 'json'}, JSON.dump(response)]
+          end
+        end
+
+        expect {
+          client.record.post_json(request)
+        }.to raise_error(Kintone::Error, [response['message'], 'record', 'post', request].join(' '))
+      end
+    end
   end
 end

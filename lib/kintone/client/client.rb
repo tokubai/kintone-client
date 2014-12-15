@@ -74,7 +74,7 @@ class Kintone::Client
       body = response.body
 
       if response.status != 200
-        raise body.kind_of?(Hash) ? Kintone::Error.new(body) : body.inspect
+        raise body.kind_of?(Hash) ? Kintone::Error.new(body, @path, method_name, params) : body.inspect
       end
 
       body
