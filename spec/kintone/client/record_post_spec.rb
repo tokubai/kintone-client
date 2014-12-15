@@ -61,6 +61,7 @@ describe Kintone::Client do
       expect(result).to eq response
     end
 
+    # https://cybozudev.zendesk.com/hc/ja/articles/201941754-REST-API%E3%81%AE%E5%85%B1%E9%80%9A%E4%BB%95%E6%A7%98#step10
     context 'when error happens' do
       let(:request) do
         {"app"=>1972}
