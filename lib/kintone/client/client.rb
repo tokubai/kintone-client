@@ -63,7 +63,7 @@ class Kintone::Client
           req.body = JSON.dump(params)
           req.headers['Content-Type'] = 'application/json'
         else
-          req.params = params || {}
+          req.params = expand_params_array(params || {})
         end
 
         authorize(req)
@@ -78,6 +78,40 @@ class Kintone::Client
       end
 
       body
+    end
+
+    def expand_params_array(params)
+      params.keys.each do |key|
+        value = params[key]
+
+        if can_be_expanded?(value)
+          params.delete(key)
+
+          value.each_with_index do |v, i|
+            params["#{key}[#{i}]"] = v
+          end
+        else
+          params[key] = expand_params_array0(value)
+        end
+      end
+
+      params
+    end
+
+    def expand_params_array0(value)
+      case value
+      when Array
+        value.map {|v| expand_params_array0(v) }
+      when Hash
+        expand_params_array(value)
+      else
+        value
+      end
+    end
+
+    def can_be_expanded?(value)
+      value.kind_of?(Array) &&
+      value.all? {|v| not v.kind_of?(Array) and not v.kind_of?(Hash) }
     end
 
     def authorize(req)
