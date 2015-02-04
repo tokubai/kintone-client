@@ -29,7 +29,7 @@ describe Kintone::Client do
       it do
         client = kintone_client do |stub|
           stub.get('/k/v1/record.json') do |env|
-            expect(params_from_url(env)).to eq({"app"=>"8", "fields[]"=>"dropdown", "query"=>"updated_time > \"2012-02-03T09:00:00+0900\" and updated_time < \"2012-02-03T10:00:00+0900\" order by record_id asc limit 10 offset 20"})
+            expect(params_from_url(env)).to eq({"app"=>["8"], "fields[]"=>["record_id", "created_time", "dropdown"], "query"=>["updated_time > \"2012-02-03T09:00:00+0900\" and updated_time < \"2012-02-03T10:00:00+0900\" order by record_id asc limit 10 offset 20"]})
             expect(env[:request_headers]['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
             [200, {'Content-Type' => 'json'}, JSON.dump(response)]
           end

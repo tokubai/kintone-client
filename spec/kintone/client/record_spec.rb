@@ -81,7 +81,7 @@ describe Kintone::Client do
     it do
       client = kintone_client do |stub|
         stub.get('/k/v1/record.json') do |env|
-          expect(params_from_url(env)).to eq({"app"=>"8", "id"=>"100"})
+          expect(params_from_url(env)).to eq({"app"=>["8"], "id"=>["100"]})
           expect(env[:request_headers]['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
           [200, {'Content-Type' => 'json'}, JSON.dump(response)]
         end
