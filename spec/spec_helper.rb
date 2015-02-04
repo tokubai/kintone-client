@@ -1,4 +1,5 @@
 require 'kintone/client'
+require 'cgi'
 
 TEST_AUTH_HEADER = 'c2NvdHQ6dGlnZXI='
 
@@ -13,6 +14,6 @@ def kintone_client
 end
 
 def params_from_url(env)
-  query = URI.parse(env.url.to_s).query
-  query ? URI.decode(query) : query
+  query = URI.parse(env[:url].to_s).query
+  query ? CGI.parse(query) : query
 end
