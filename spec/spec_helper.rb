@@ -13,6 +13,6 @@ def kintone_client
 end
 
 def params_from_url(env)
-  query = URI.parse(env.url.to_s).query
-  query ? URI.decode(query) : query
+  query = URI.parse(env[:url].to_s).query
+  query ? Hash[URI.decode_www_form(query)] : query
 end

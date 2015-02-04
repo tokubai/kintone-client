@@ -44,9 +44,9 @@ describe Kintone::Client do
     it do
       client = kintone_client do |stub|
         stub.post('/k/v1/bulkRequest.json') do |env|
-          expect(env.body).to eq JSON.dump(request)
-          expect(env.request_headers['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
-          expect(env.request_headers['Content-Type']).to eq 'application/json'
+          expect(env[:body]).to eq JSON.dump(request)
+          expect(env[:request_headers]['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
+          expect(env[:request_headers]['Content-Type']).to eq 'application/json'
           [200, {'Content-Type' => 'json'}, JSON.dump(response)]
         end
       end
@@ -58,9 +58,9 @@ describe Kintone::Client do
     it do
       client = kintone_client do |stub|
         stub.post('/k/v1/bulkRequest.json') do |env|
-          expect(env.body).to eq JSON.dump(request)
-          expect(env.request_headers['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
-          expect(env.request_headers['Content-Type']).to eq 'application/json'
+          expect(env[:body]).to eq JSON.dump(request)
+          expect(env[:request_headers]['X-Cybozu-Authorization']).to eq TEST_AUTH_HEADER
+          expect(env[:request_headers]['Content-Type']).to eq 'application/json'
           [200, {'Content-Type' => 'json'}, JSON.dump(response)]
         end
       end
