@@ -23,10 +23,10 @@ describe Kintone::Client do
          "数値"=>20,
          "日時"=>"2014-02-16T08:57:00Z",
          "チェックボックス"=>{"value"=>["sample1", "sample2"]},
-         "ユーザー選択"=>{"value"=>[{"code"=>"sato"}]},
+         "ユーザー選択"=>{value: [{"code"=>"sato"}]},
          "ドロップダウン"=>"sample1",
          "リンク_ウェブ"=>"https://www.cybozu.com",
-         "Table"=>{"value"=>[{"value"=>{"テーブル文字列"=>{"value"=>"テスト"}}}]}}}
+         "Table"=>{value: [{"value"=>{"テーブル文字列"=>{value: "テスト"}}}]}}}
     end
 
     let(:response) do
