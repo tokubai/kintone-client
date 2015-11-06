@@ -20,9 +20,9 @@ class Kintone::Client
 
     @conn = Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
-      faraday.request  :record, :content_type => /\bjson$/
-      faraday.response :form,   :content_type => /\bjson$/ # must set before :json
-      faraday.response :json,   :content_type => /\bjson$/
+      faraday.request  :record, :content_type => /\bjson\b/
+      faraday.response :form,   :content_type => /\bjson\b/ # must set before :json
+      faraday.response :json,   :content_type => /\bjson\b/
 
       yield(faraday) if block_given?
 
