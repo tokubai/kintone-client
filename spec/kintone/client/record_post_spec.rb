@@ -68,7 +68,10 @@ describe Kintone::Client do
       end
 
       let(:response) do
-        {"message"=>"不正なJSON文字列です。", "id"=>"1505999166-897850006", "code"=>"CB_IJ01"}
+        {"message"=>"不正なJSON文字列です。",
+         "errors"=>{"item"=>{"messages"=>["不正なJSON文字列です。"]}},
+         "id"=>"1505999166-897850006",
+         "code"=>"CB_IJ01"}
       end
 
       it do
@@ -83,7 +86,7 @@ describe Kintone::Client do
 
         expect {
           client.record.post_json(request)
-        }.to raise_error(Kintone::Error, [response['message'], 'record', 'post', request].join(' '))
+        }.to raise_error(Kintone::Error, [response['message'], response['errors'], 'record', 'post', request].join(' '))
       end
     end
   end
