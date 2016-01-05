@@ -23,7 +23,7 @@ Or install it yourself as:
 ```ruby
 require 'kintone/client'
 
-client = Kintone::Client.new(subdomein: "max6j", login_name: "Genki Sugawara", password: "...")
+client = Kintone::Client.new(subdomain: "max6j", login_name: "Genki Sugawara", password: "...")
 
 # https://cybozudev.zendesk.com/hc/ja/articles/202931674-%E3%82%A2%E3%83%97%E3%83%AA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E5%BE%97
 p client.app.get(id: 211)
