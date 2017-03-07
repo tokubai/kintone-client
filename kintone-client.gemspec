@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['sugawara@cookpad.com']
   spec.summary       = %q{It is a simple client of cybozu kintone.}
   spec.description   = %q{It is a simple client of cybozu kintone.}
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/tokubai/kintone-client'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
